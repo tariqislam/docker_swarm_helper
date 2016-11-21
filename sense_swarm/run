@@ -3,13 +3,36 @@
 import subprocess
 from sense_hat import SenseHat
 from time import sleep
+from random import randint
 
 sense = SenseHat()
+sense.clear()
+
+maxRGB = 100
+minRGB = 50
+
+counter = 1
 
 message = subprocess.check_output("docker node ls | awk '{ if ($2 != \"*\") { print $2, \" \", $4 } else { print $3, \" \", $5 } }'; exit 0", stderr=subprocess.STDOUT, shell=True)
 
 sense.show_message(message, scroll_speed=0.1, text_colour=[100, 100, 100])
 sense.clear()
-sleep(300)
+
+while (counter % 300) != 0:
+
+        i = randint(0, 7)
+        j = randint(0, 7)
+
+        r = randint(minRGB, maxRGB)
+        g = randint(minRGB, maxRGB)
+        b = randint(minRGB, maxRGB)
+
+        if (counter % 60) == 0:
+                sense.clear()
+        else:
+                sense.set_pixel(i, j, [r, g, b])
+
+        sleep(1)
+        counter += 1
 
 
